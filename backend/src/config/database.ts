@@ -3,6 +3,7 @@ import { env } from './env';
 
 // Use thin mode (no Oracle client needed)
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+oracledb.fetchAsString = [ oracledb.CLOB ];
 oracledb.autoCommit = false; // We manage transactions explicitly
 
 let opsPool: oracledb.Pool | null = null;
