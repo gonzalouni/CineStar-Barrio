@@ -1,0 +1,70 @@
+services:
+  # ─── Oracle 21c XE Database ───
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: cinestar-oracle
+    hostname: oracle-db
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+      APP_USER: ${ORACLE_OPS_USER}
+      APP_USER_PASSWORD: ${ORACLE_OPS_PASSWORD}
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./database:/container-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/${ORACLE_PASSWORD}@//localhost:1521/XEPDB1"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 120s
+
+  # ─── Backend API (Node.js + Express) ───
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cinestar-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: ${PORT}
+      DB_HOST: oracle-db
+      DB_PORT: ${DB_PORT}
+      DB_SERVICE: ${DB_SERVICE}
+      ORACLE_OPS_USER: ${ORACLE_OPS_USER}
+      ORACLE_OPS_PASSWORD: ${ORACLE_OPS_PASSWORD}
+      ORACLE_ADMIN_USER: ${ORACLE_ADMIN_USER}
+      ORACLE_ADMIN_PASSWORD: ${ORACLE_ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+
+  # ─── Frontend (React + Vite) ───
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cinestar-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000/api
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+
+volumes:
+  oracle-data:
+    name: cinestar-oracle-data

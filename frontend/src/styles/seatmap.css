@@ -1,0 +1,376 @@
+/* ============================================
+   CineStar Barrio — Seat Map Styles
+   Diseño basado en la imagen de referencia
+   ============================================ */
+
+.seat-map-container {
+  padding: var(--space-6);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-glass-border);
+  border-radius: var(--radius-xl);
+}
+
+/* ─── Screen indicator ─── */
+.screen-indicator {
+  text-align: center;
+  margin-bottom: var(--space-8);
+  position: relative;
+}
+
+.screen-indicator::before {
+  content: '';
+  display: block;
+  width: 70%;
+  height: 6px;
+  margin: 0 auto var(--space-3);
+  background: linear-gradient(90deg, transparent, var(--color-primary), var(--color-primary-light), var(--color-primary), transparent);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 20px var(--color-primary-glow), 0 0 40px rgba(37, 99, 235, 0.15);
+}
+
+.screen-indicator span {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+
+/* ─── Seats Grid ─── */
+.seats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  padding: var(--space-4) 0;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  justify-content: center;
+}
+
+.row-label {
+  width: 28px;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.row-label-left {
+  margin-right: 8px;
+}
+
+.row-label-right {
+  margin-left: 8px;
+}
+
+.seats-section {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.seats-section-principal {
+  /* Main section */
+}
+
+.seats-aisle {
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.seats-section-lateral {
+  /* Side section */
+}
+
+/* ─── Individual Seat ─── */
+.seat {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--seat-available-border);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 0;
+}
+
+.seat:hover:not(.seat-occupied):not(.seat-disabled) {
+  transform: scale(1.15);
+  box-shadow: 0 0 12px var(--color-primary-glow);
+}
+
+/* Available */
+.seat-available {
+  border-color: var(--seat-available-border);
+  background: transparent;
+}
+
+.seat-available:hover {
+  background: rgba(37, 99, 235, 0.2);
+}
+
+/* Occupied (reserved or sold) */
+.seat-occupied {
+  background: var(--seat-occupied);
+  border-color: var(--seat-occupied-border);
+  cursor: not-allowed;
+}
+
+.seat-occupied:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Selected by user */
+.seat-selected {
+  background: var(--seat-selected);
+  border-color: var(--seat-selected-border);
+  box-shadow: 0 0 10px rgba(30, 64, 175, 0.5);
+  animation: seatPulse 2s ease-in-out infinite;
+}
+
+/* Wheelchair seat */
+.seat-wheelchair {
+  border-radius: 8px;
+  position: relative;
+}
+
+.seat-wheelchair::after {
+  content: '♿';
+  font-size: 14px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seat-wheelchair.seat-available {
+  border-color: var(--seat-wheelchair-border);
+}
+
+.seat-wheelchair.seat-available::after {
+  color: var(--seat-wheelchair);
+}
+
+.seat-wheelchair.seat-selected::after {
+  color: white;
+}
+
+.seat-wheelchair.seat-occupied::after {
+  color: white;
+}
+
+.seat-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ─── Seat Number Tooltip ─── */
+.seat:not(.seat-occupied)::before {
+  content: attr(data-label);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+  border: 1px solid var(--border-color);
+  z-index: 10;
+}
+
+.seat:hover::before {
+  opacity: 1;
+}
+
+/* ─── Legend ─── */
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+
+.legend-dot-available {
+  border-color: var(--seat-available-border);
+  background: transparent;
+}
+
+.legend-dot-occupied {
+  border-color: var(--seat-occupied-border);
+  background: var(--seat-occupied);
+}
+
+.legend-dot-selected {
+  border-color: var(--seat-selected-border);
+  background: var(--seat-selected);
+}
+
+.legend-dot-wheelchair {
+  border-color: var(--seat-wheelchair-border);
+  background: transparent;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* ─── Summary ─── */
+.seat-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.seat-summary-item {
+  text-align: center;
+  padding: var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.seat-summary-number {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.seat-summary-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Reservation Panel ─── */
+.reservation-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.selected-seats-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+}
+
+.selected-seat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: rgba(37, 99, 235, 0.2);
+  color: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.selected-seat-tag button {
+  background: none;
+  border: none;
+  color: var(--color-primary-light);
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: var(--font-size-base);
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.selected-seat-tag button:hover {
+  opacity: 1;
+}
+
+/* ─── Reservation Layout ─── */
+.reservation-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .reservation-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .seat {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .seats-aisle {
+    width: 16px;
+  }
+  
+  .row-label {
+    width: 22px;
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 640px) {
+  .seat {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .seats-section {
+    gap: 2px;
+  }
+  
+  .seat-legend {
+    gap: var(--space-4);
+  }
+}
+
+/* ─── Animations ─── */
+@keyframes seatPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(30, 64, 175, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(30, 64, 175, 0.8); }
+}
