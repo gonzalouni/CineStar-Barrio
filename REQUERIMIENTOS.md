@@ -13,6 +13,7 @@ Actualmente CineStar Barrio no cuenta con un sistema centralizado, lo que genera
 - Sobreventa de asientos por falta de sincronización en tiempo real entre taquilla y teléfono.
 - Falta de visibilidad inmediata sobre disponibilidad de asientos.
 - Verificaciones manuales que retrasan la atención al público.
+- No existe información de auditoría de las funciones y reservas.
 
 ---
 
