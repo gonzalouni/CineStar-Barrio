@@ -8,6 +8,7 @@ services:
     ports:
       - "1521:1521"
     environment:
+      TZ: America/Lima
       ORACLE_PASSWORD: ${ORACLE_PASSWORD}
       APP_USER: ${ORACLE_OPS_USER}
       APP_USER_PASSWORD: ${ORACLE_OPS_PASSWORD}
@@ -31,6 +32,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      TZ: America/Lima
       PORT: ${PORT}
       DB_HOST: oracle-db
       DB_PORT: ${DB_PORT}
@@ -59,6 +61,7 @@ services:
     ports:
       - "5173:5173"
     environment:
+      TZ: America/Lima
       VITE_API_URL: http://localhost:3000/api
     depends_on:
       - backend
